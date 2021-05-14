@@ -64,15 +64,41 @@ const googleSignin = async ( req, res = response) => {
     const {id_token} = req.body;
 
     try {
-    const googleUser = await googleVerify(id_token);
+    const {correo, nombre, img} = await googleVerify(id_token);
 
-    console.log(googleUser);
+        let usuario = await Usuario.findOne({correo});
 
+        if(!usuario){
+
+            const data = {
+
+                nombre,
+                correo,
+                password:'empty',
+                img,
+                google:true
+            };
+
+            usuario = new Usuario(data);
+            await usuario.save();
+        }
+
+        if(!usuario.estado){
+
+            return res.status(401).json({
+
+                msg:'Usuario dado de baja, hable con el administrador'
+            });
+        }
+
+        // Generar el JWWT 
+
+        const token = await generarJWT(usuario.id);
         
         res.json({
-        msg:'Todo ok, google signin',
-        googleUser,
-        })
+        usuario,
+        token
+        });
 
     } catch (error) {
 
