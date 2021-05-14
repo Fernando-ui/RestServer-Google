@@ -20,7 +20,7 @@
     
     <script>
 
-        console.log(window.location.hostname.includes('localhost'), 'Justo aqui');
+        console.log(window.location.hostname.includes('localhost'));
         var url = (window.location.hostname.includes('localhost'))
                 ?'https://localhost:8080/api/auth/google'
                 :'https://cafenodeferst.herokuapp.com/api/auth/google';
@@ -37,25 +37,26 @@
             var id_token = googleUser.getAuthResponse().id_token;
             const data = { id_token };
 
-            
+            //TODO: Revisar el fetch
             fetch (url,{
+
                 method:'POST',
-                headers:{'Content-Type':'application/json'},
+                headers:{'Content-Type': 'application/json'},
                 body:JSON.stringify(data)
+
             })
-                .then(resp => resp.json())
-                .then(data => console.log('Nuestro server') )
-                .catch(console.log);
-        
+            .then(resp => resp.json())
+            .then(data  => console.log('nuestro server',data))
+            .catch(console.log);
             
         }
-
-            function signOut() {
-            var auth2 = gapi.auth2.getAuthInstance();
-            auth2.signOut().then(function () {
-            console.log('User signed out.');
-            });
-        }
+    
+        function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+        console.log('User signed out.');
+        });
+    }
     </script>
 </body>
 </html>
