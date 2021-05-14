@@ -35,6 +35,7 @@ var url = ( window.location.hostname.includes('localhost') )
 
             
             var id_token = googleUser.getAuthResponse().id_token;
+            // Lo extraje con ese nombre
             const data = { id_token };
 
             fetch( url, {
