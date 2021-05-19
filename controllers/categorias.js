@@ -53,8 +53,6 @@ const obtenerCategorias = async ( req, res = response) => {
         Categoria.find(query).skip(Number(desde)).limit(Number(limite)),
         
     ])
-    //TODO: Encontrar porque no agarra el finby
-    
 
     res.json({
         total,
@@ -63,7 +61,21 @@ const obtenerCategorias = async ( req, res = response) => {
 
 }
 
+const obtenerUnaCategoria = async ( req, res = response) => {
+    const {id} = req.params;
+    const categoria = await Categoria.findById(id)
+
+    res.json({
+        categoria
+        // id
+    })
+}
+
+
+
+
 module.exports = {
     crearCategoria,
-    obtenerCategorias
+    obtenerCategorias,
+    obtenerUnaCategoria
 }

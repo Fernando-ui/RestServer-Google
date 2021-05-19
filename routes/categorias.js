@@ -1,7 +1,8 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 const { login, googleSignin } = require('../controllers/auth');
-const { crearCategoria, obtenerCategorias } = require('../controllers/categorias');
+const { crearCategoria, obtenerCategorias, obtenerUnaCategoria } = require('../controllers/categorias');
+const { existeCategoria } = require('../helpers/db-validators');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 
@@ -16,17 +17,17 @@ validarCampos
 
 ],obtenerCategorias)
 
-// obtener Categoria por id - publico
 
-//TODO: Hacer una middleware personalizado para verificar el id,
-//TODO: Añadir el middleware con el
+
 router.get('/:id',[
 
-    // check('id','El id es invalido').isMongoId(),
+    check('id','El id es invalido').isMongoId(),
+    check('id').custom(existeCategoria),
+    validarCampos
 
-],)
+], obtenerUnaCategoria)
 
-// Crear categoria - privado -cualquier personas con un token valido
+
 router.post('/',[
     validarJWT,
     check('nombre','El nombre es obligatorio').not().isEmpty(),
