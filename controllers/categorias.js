@@ -1,5 +1,15 @@
 const {response } = require('express');
-const {Categoria} = require('../models')
+const {Categoria, Usuario} = require('../models');
+const mongoose = require('mongoose');
+
+//TODO: HAcer los controladores
+
+// Obrener categorias - paginado -  total de cuantas fuero- populate es de mongoose buscar que es 
+
+
+// Usar el get
+// Con el populate podemos hacer la relacion del usuario para saber quien es el que guardo
+// Otro controlador llamado obtener cateogiria populate
 
 const crearCategoria = async ( req, res = response) => {
 
@@ -27,6 +37,33 @@ const crearCategoria = async ( req, res = response) => {
 }
 
 
+// Actualizar categoria, que nos permita cambiar el nombre de galleta en este ejemplo, al menos por otro 
+
+// Borrar categoria , seria cambiar el estado a false 
+
+const obtenerCategorias = async ( req, res = response) => {
+
+    const {limite = 5, desde = 0} = req.query;
+    const query = {estado:true};
+
+    
+    const [total, categoria] = await Promise.all([
+        
+        Categoria.countDocuments(query),
+        Categoria.find(query).skip(Number(desde)).limit(Number(limite)),
+        
+    ])
+    //TODO: Encontrar porque no agarra el finby
+    
+
+    res.json({
+        total,
+        categoria
+    })
+
+}
+
 module.exports = {
-    crearCategoria
+    crearCategoria,
+    obtenerCategorias
 }
