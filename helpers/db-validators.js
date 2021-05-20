@@ -1,6 +1,7 @@
 const Role = require('../models/role');
 const Usuario = require('../models/usuario');
 const Categoria = require('../models/categoria');
+const { response } = require('express');
 
 
 
@@ -42,11 +43,21 @@ const existeCategoria = async ( id ) => {
     }
 }
 
+const existeNombreCategoria = async ( nombre ) => {
+
+    const existeNombre = await Categoria.findOne({nombre});
+    if(existeNombre){
+
+        throw new Error(`El nombre ${nombre} ya esta registrado`);
+    }
+}
+
 module.exports = {
     
     esRoleValido,
     emailExiste,
     existeUsuarioPorId,
-    existeCategoria
+    existeCategoria,
+    existeNombreCategoria
 
 };

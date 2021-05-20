@@ -75,11 +75,17 @@ const actualizarCategoria = async (req, res = response) => {
 
     const {id} = req.params;
     const {estado,_id,usuario,...resto} = req.body;
-
-    const categoria = await Categoria.findByIdAndUpdate(id,resto);
+    const restoCapitalizado = resto.nombre.toUpperCase();
+    const nameObject = {
+        nombre:restoCapitalizado
+    }
+    const categoria = await Categoria.findByIdAndUpdate(id,nameObject);
 
     res.json({
-        categoria
+        categoria,
+        resto
+        // restoCapitalizado
+        
     })
 }
 
