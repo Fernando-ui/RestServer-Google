@@ -71,11 +71,22 @@ const obtenerUnaCategoria = async ( req, res = response) => {
     })
 }
 
+const actualizarCategoria = async (req, res = response) => {
 
+    const {id} = req.params;
+    const {estado,_id,usuario,...resto} = req.body;
+
+    const categoria = await Categoria.findByIdAndUpdate(id,resto);
+
+    res.json({
+        categoria
+    })
+}
 
 
 module.exports = {
     crearCategoria,
     obtenerCategorias,
-    obtenerUnaCategoria
+    obtenerUnaCategoria,
+    actualizarCategoria
 }
