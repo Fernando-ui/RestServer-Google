@@ -43,9 +43,10 @@ const existeCategoria = async ( id ) => {
     }
 }
 
-const existeNombreCategoria = async ( nombre ) => {
+const existeNombreCategoria = async ( nombre = '') => {
 
-    const existeNombre = await Categoria.findOne({nombre});
+    const existeNombre = await Categoria.findOne({nombre:nombre.toUpperCase()});
+    
     if(existeNombre){
 
         throw new Error(`El nombre ${nombre} ya esta registrado`);
