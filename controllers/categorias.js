@@ -50,7 +50,7 @@ const obtenerCategorias = async ( req, res = response) => {
     const [total, categoria] = await Promise.all([
         
         Categoria.countDocuments(query),
-        Categoria.find(query).skip(Number(desde)).limit(Number(limite)),
+        Categoria.find(query).skip(Number(desde)).limit(Number(limite)).populate('usuario','nombre'),
         
     ])
 
@@ -63,7 +63,7 @@ const obtenerCategorias = async ( req, res = response) => {
 
 const obtenerUnaCategoria = async ( req, res = response) => {
     const {id} = req.params;
-    const categoria = await Categoria.findById(id)
+    const categoria = await Categoria.findById(id).populate('usuario','nombre');
 
     res.json({
         categoria
@@ -75,15 +75,18 @@ const actualizarCategoria = async (req, res = response) => {
 
     const {id} = req.params;
     const {estado,_id,usuario,...resto} = req.body;
+
+    // Capitalizando lo que estamos obteniendo
     const restoCapitalizado = resto.nombre.toUpperCase();
     const nameObject = {
         nombre:restoCapitalizado
-    }
-    const categoria = await Categoria.findByIdAndUpdate(id,nameObject);
+    };
+
+    // El {new:true} nos devuelve el objeto nuevo, o modificado para que lo podamos mostrar a como se actualizo
+    const categoria = await Categoria.findByIdAndUpdate(id,nameObject,{new:true});
 
     res.json({
-        categoria,
-        resto
+        categoria
         // restoCapitalizado
         
     })
@@ -94,7 +97,7 @@ const borrarCategoria = async (req, res = response ) => {
     const { id } = req.params;
 
 
-    const usuario = await Categoria.findByIdAndUpdate(id, {estado:false});
+    const usuario = await Categoria.findByIdAndUpdate(id, {estado:false},{new:true});
 
     res.json({
         usuario

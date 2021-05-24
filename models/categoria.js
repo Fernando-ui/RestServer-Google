@@ -1,6 +1,7 @@
 
 
 const { Schema, model} = require('mongoose');
+const usuario = require('./usuario');
 
 
 const categoriaChema = Schema({
@@ -25,5 +26,12 @@ const categoriaChema = Schema({
     }
 
 });
+
+categoriaChema.methods.toJSON = function( ) {
+
+    const {__v,estado,...data} = this.toObject();
+    return data;
+    
+}
 
 module.exports = model('Categoria', categoriaChema);
