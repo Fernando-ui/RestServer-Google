@@ -1,6 +1,5 @@
 const {response } = require('express');
 const {Categoria, Usuario} = require('../models');
-const mongoose = require('mongoose');
 
 //TODO: HAcer los controladores
 
@@ -87,7 +86,6 @@ const actualizarCategoria = async (req, res = response) => {
 
     res.json({
         categoria
-        // restoCapitalizado
         
     })
 }

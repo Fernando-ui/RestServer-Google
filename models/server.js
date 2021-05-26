@@ -12,7 +12,7 @@ class Server{
             
             auth:       '/api/auth',
             categorias: '/api/categorias',
-            productos:  'api/productos',
+            productos:  '/api/productos',
             usuarios:   '/api/usuarios'
 
         }
