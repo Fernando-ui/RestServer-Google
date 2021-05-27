@@ -19,13 +19,31 @@ const buscarUsuarios = async(termino = '', res = response) =>{
 
     if(esMongoID){
 
-        const usuario = await Usuario.findById(termino)
+        const usuario = await Usuario.findById(termino);
 
-        res.json({
+        return res.json({
             result: (usuario) ? [usuario] : ['No hay usuario']
-        })
+        });
     }
 
+    const regex = new RegExp(termino,'i');
+
+    const [usuarios, total] = [await Usuario.find({
+    
+        $or:[{nombre:regex}, {correo:regex}],
+        $and:[{estado:true}]
+        
+    }), await Usuario.countDocuments({
+    
+        $or:[{nombre:regex}, {correo:regex}],
+        $and:[{estado:true}]
+        
+    })];
+
+    res.json({
+        total,
+        results:usuarios
+    })
 }
 
 const buscar = (req, res = response ) => {
