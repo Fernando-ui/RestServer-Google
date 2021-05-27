@@ -1,9 +1,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { login, googleSignin } = require('../controllers/auth');
-const { crearCategoria, obtenerCategorias, obtenerUnaCategoria, actualizarCategoria, borrarCategoria } = require('../controllers/categorias');
-const { crearProducto, obtenerProductos, obtenerProductoPorID, actualizarProducto } = require('../controllers/productos');
-const { existeCategoria, existeNombreCategoria, existeProductoPorId } = require('../helpers/db-validators');
+const { crearProducto, obtenerProductos, obtenerProductoPorID, actualizarProducto, elminarProducto } = require('../controllers/productos');
+const { existeProductoPorId } = require('../helpers/db-validators');
 const { esAdminRole } = require('../middlewares');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
@@ -54,9 +52,9 @@ router.delete('/:id',[
     validarJWT,
     esAdminRole,
     check('id','El id es invalido').isMongoId(),
-    check('id').custom(existeCategoria),
+    check('id').custom(existeProductoPorId),
     validarCampos
-],borrarCategoria)
+],elminarProducto)
 
 
 module.exports = router;

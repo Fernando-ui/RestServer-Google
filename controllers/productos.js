@@ -15,7 +15,6 @@ const crearProducto = async (req, res = respone) => {
     }
 
     const data = {
-        //TODO: Verificar el nombre que aparece no definido
         ...body,
         nombre:body.nombre.toUpperCase(),
         usuario:req.usuario._id
@@ -66,28 +65,41 @@ const actualizarProducto = async(req, res = response ) => {
     const {nombre, precio, descripcion} = req.body;
 
     const productoCapitalizado = nombre.toUpperCase();
-    const nameObject = {
-
-        nombre:productoCapitalizado
-    }
+    
     
 
     const producto = await Producto.findByIdAndUpdate(id,{
 
-        nameObject,
+        nombre:productoCapitalizado,
         precio,
         descripcion
 
     },{new:true}).populate('usuario','nombre');
 
     res.json({
-        producto
+        producto,
+        
     })
+}
+
+const elminarProducto = async(req, res = response ) => {
+
+    const {id} = req.params;
+
+    const producto = await Producto.findByIdAndUpdate(id,{estado:false},{new:true});
+
+    res.json({
+    
+        producto
+        
+    })
+
 }
 
 module.exports = {
     obtenerProductos,
     crearProducto,
     obtenerProductoPorID,
-    actualizarProducto
+    actualizarProducto,
+    elminarProducto
 }
