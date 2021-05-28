@@ -6,7 +6,7 @@ const {Usuario, Categoria, Producto } = require('../models')
 const coleccionesPermitidas = [
 
     'usuarios',
-    'categoria',
+    'categorias',
     'productos',
     'roles'
 
@@ -46,6 +46,74 @@ const buscarUsuarios = async(termino = '', res = response) =>{
     })
 }
 
+const buscarCategoria = async (termino = '', res = response ) => {
+
+    const esMongoID = ObjectId.isValid(termino);
+
+    if(esMongoID){
+
+        const usuario = await Categoria.findById(termino);
+
+        return res.json({
+            result: (usuario) ? [usuario] : ['No existe categoria con ese ID, verifiquelo']
+        });
+    }
+
+    const regex = new RegExp(termino,'i');
+
+    const [usuarios, total] = [await Categoria.find({
+    
+        $or:[{nombre:regex}],
+        $and:[{estado:true}]
+        
+    }), await Categoria.countDocuments({
+    
+        $or:[{nombre:regex}],
+        $and:[{estado:true}]
+        
+    })];
+
+    res.json({
+        total,
+        results:usuarios
+    })
+}
+
+const buscarProductos = async(termino = '', res = response ) => {
+
+
+    const esMongoID = ObjectId.isValid(termino);
+
+    if(esMongoID){
+
+        const usuario =  (await Producto.findById(termino)).populate('categoria','nombre').populate('usuario','nombre');
+
+        return res.json({
+            result: (usuario) ? [usuario] : ['No existe un producto con ese ID, verifiquelo']
+        });
+    }
+
+    const regex = new RegExp(termino,'i');
+
+    const [usuarios, total] = [await Producto.find({
+    
+        $or:[{nombre:regex},{descripcion:regex}],
+        $and:[{estado:true}]
+        
+    }).populate('categoria','nombre'), await Producto.countDocuments({
+    
+        $or:[{nombre:regex},{descripcion:regex}],
+        $and:[{estado:true}]
+        
+    })];
+
+    res.json({
+        total,
+        results:usuarios
+    })
+
+}
+
 const buscar = (req, res = response ) => {
 
 
@@ -65,12 +133,15 @@ const buscar = (req, res = response ) => {
 
         break;
 
-        case'categoria':
+        case'categorias':
+
+            buscarCategoria(termino,res);
 
         break;
 
         case'productos':
 
+            buscarProductos(termino, res);
         break;
 
         default:
@@ -87,6 +158,7 @@ const buscar = (req, res = response ) => {
 module.exports = {
 
     buscar,
-    buscarUsuarios
+    buscarUsuarios,
+    buscarCategoria
 
 }
