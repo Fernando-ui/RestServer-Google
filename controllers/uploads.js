@@ -17,20 +17,37 @@ const cargarArchivos = ( req, res = response) => {
 
 
     const {archivo} = req.files;
+    const nombreCortado = archivo.name.split('.');
+    const extension = nombreCortado[nombreCortado.length - 1];
 
-    uploadPath = path.join(__dirname, '../uploads/', archivo.name);
+    const extensionesPermitidas = ['jpg','jpeg','png','gif'];
 
-    archivo.mv(uploadPath, (err) => {
+    if(!extensionesPermitidas.includes(extension)){
 
-        if (err) {
+        return res.status(400).json({
+            mst:`La extension ${extension} no es permitida, solo se permiten ${extensionesPermitidas}`
+        })
 
-            return res.status(500).send({err});
 
-        }
+    }
 
-        res.json({msg:'El archivo se ha subido al path' + uploadPath});
+    res.json({
+        extension
+    })
+
+    // uploadPath = path.join(__dirname, '../uploads/', archivo.name);
+
+    // archivo.mv(uploadPath, (err) => {
+
+    //     if (err) {
+
+    //         return res.status(500).send({err});
+
+    //     }
+
+    //     res.json({msg:'El archivo se ha subido al path' + uploadPath});
     
-    });
+    // });
 
 }
 module.exports= {
