@@ -1,3 +1,6 @@
+const path = require('path');
+const fs = require('fs');
+
 const { response } = require("express");
 const { subirArchivo } = require("../helpers");
 const { Usuario, Producto} = require('../models')
@@ -63,6 +66,18 @@ const actualizarImagen = async (req, res = response ) => {
     
         default:
             return res.status(500).json({msg:'Se olvido validar esta parte'})
+    }
+
+
+    if(modelo.img){
+        
+        const pathImagen = path.join(__dirname, '../uploads', coleccion, modelo.img);
+
+        if(fs.existsSync(pathImagen)){
+
+            fs.unlinkSync(pathImagen);
+
+        }
     }
 
     const nombre = await subirArchivo(req.files, undefined, coleccion);
